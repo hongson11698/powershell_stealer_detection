@@ -14,8 +14,13 @@ echo "Audit File System"
 Auditpol.exe /set /subcategory:"File System" /success:enable /failure:disable
 
 echo "Setting audit Monitor browser sensitive data..."
-@powershell -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File '%currentpath%*.ps1'"
-@powershell -NoProfile -ExecutionPolicy Bypass -Command "& '%currentpath%enable_audit_browser_data_and_install.ps1'"
+@powershell "exit $PSVersionTable.PSVersion.Major"
+if %errorlevel% GEQ 3 (
+    echo "Powershell 3 detected! Unblocking file..."
+    @powershell -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File '%currentpath%*.ps1'"
+)
 
+@powershell -NoProfile -ExecutionPolicy Bypass -Command "& '%currentpath%enable_audit_browser_data.ps1'"
+@powershell -NoProfile -ExecutionPolicy Bypass -Command "& '%currentpath%install_and_start_service.ps1'"
 
 pause
